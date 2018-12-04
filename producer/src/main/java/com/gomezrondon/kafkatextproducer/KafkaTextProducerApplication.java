@@ -28,6 +28,7 @@ public class KafkaTextProducerApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
+		workingDirectory = args.length > 0 ? args[0] : workingDirectory ;
 		loadFileService.readHtmlLogFile(workingDirectory);
 
 	}
