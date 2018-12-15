@@ -24,8 +24,8 @@ public class KafkaReceiver {
 
     @KafkaListener(topics = "test-topic")
     public void receiveTopic2(ConsumerRecord<?, ?> consumerRecord) {
+     //   System.out.println("Receiver on test-topic: "+consumerRecord.value());
         textProcessorService.processHtmlLogLine(just((String)consumerRecord.value()));
-      //  System.out.println("Receiver on topic2: "+consumerRecord.value());
     }
 
 }

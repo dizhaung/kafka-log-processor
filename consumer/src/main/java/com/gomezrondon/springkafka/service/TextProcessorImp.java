@@ -112,15 +112,12 @@ public class TextProcessorImp implements TextProcessorService {
 */
 
     public void processHtmlLogLine(Flux<String> fileFlux ) {
+        final String regex = "\">(.*)<";
 
          fileFlux
                 .skipWhile(s -> !s.contains("UncompressTarResource"))
-                .map(s -> s.split("</div></div><div"))
-                .flatMap(Flux::just)
-                .filter(line -> line.length() > 1500)
-                .map(line -> line.substring(1551))
-                .takeWhile(s -> !s.contains("<div id=\"f\" role=\"contentinfo\">"))
-        	    .filter(line -> line.length() > 100)
+                .map(String::trim)
+                .map(line -> getRegexPatterMatch(regex,line))
                 .flatMap(this::dataLoadStatFormat)
                 .subscribe(System.out::println);
 
@@ -131,6 +128,16 @@ public class TextProcessorImp implements TextProcessorService {
 		   4~2018-11-08T00:17:05~10209506~2018-11-07T17:29:45~ 6:47~pw-dataload-20181107172945-uat-3.7.tar~
 		*/
 
+    }
+
+
+    private String getRegexPatterMatch(String regex, String line){
+        final Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
+        final Matcher matcher = pattern.matcher(line);
+        while (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
     }
 
 }
